@@ -104,7 +104,6 @@ import (
 	"unsafe"
 
 	ctrl "sigs.k8s.io/controller-runtime"
-	fwkrh "sigs.k8s.io/gateway-api-inference-extension/pkg/epp/framework/interface/requesthandling"
 	schedtypes "sigs.k8s.io/gateway-api-inference-extension/pkg/epp/framework/interface/scheduling"
 )
 
@@ -278,7 +277,7 @@ func SerializeEndpointsToJSON(endpoints []schedtypes.Endpoint) (string, error) {
 	return string(data), nil
 }
 
-func BuildOpenAIRequest(req *schedtypes.InferenceRequest) (map[string]any, error) {
+func BuildOpenAIRequest(req *schedtypes.LLMRequest) (map[string]any, error) {
 	requestBody := make(map[string]any)
 
 	if req == nil || req.Body == nil {
@@ -330,8 +329,8 @@ func BuildOpenAIRequest(req *schedtypes.InferenceRequest) (map[string]any, error
 //
 // This is how routing hints — most notably nvext.agent_hints.priority — reach
 // the Rust router via the FFI JSON.
-func extractNvext(payload fwkrh.RequestPayload) map[string]any {
-	pm, ok := payload.(fwkrh.PayloadMap)
+func extractNvext(payload schedtypes.RequestPayload) map[string]any {
+	pm, ok := payload.(schedtypes.PayloadMap)
 	if !ok {
 		return nil
 	}

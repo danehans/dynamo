@@ -5,7 +5,7 @@ go 1.26.3
 require (
 	github.com/go-logr/logr v1.4.3
 	sigs.k8s.io/controller-runtime v0.23.3
-	sigs.k8s.io/gateway-api-inference-extension v0.0.0-20260416154104-206d40dca75d
+	sigs.k8s.io/gateway-api-inference-extension v1.5.0
 )
 
 require (

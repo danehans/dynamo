@@ -19,7 +19,6 @@ package dynamo_kv_scorer
 import (
 	"testing"
 
-	fwkrh "sigs.k8s.io/gateway-api-inference-extension/pkg/epp/framework/interface/requesthandling"
 	schedtypes "sigs.k8s.io/gateway-api-inference-extension/pkg/epp/framework/interface/scheduling"
 )
 
@@ -29,15 +28,15 @@ import (
 // the router falls back to priority_jump=0.0 for every request and queue
 // ordering silently regresses.
 func TestBuildOpenAIRequest_ForwardsAgentHintsPriority(t *testing.T) {
-	req := &schedtypes.InferenceRequest{
+	req := &schedtypes.LLMRequest{
 		TargetModel: "test-model",
-		Body: &fwkrh.InferenceRequestBody{
-			ChatCompletions: &fwkrh.ChatCompletionsRequest{
-				Messages: []fwkrh.Message{
-					{Role: "user", Content: fwkrh.Content{Raw: "hi"}},
+		Body: &schedtypes.LLMRequestBody{
+			ChatCompletions: &schedtypes.ChatCompletionsRequest{
+				Messages: []schedtypes.Message{
+					{Role: "user", Content: schedtypes.Content{Raw: "hi"}},
 				},
 			},
-			Payload: fwkrh.PayloadMap{
+			Payload: schedtypes.PayloadMap{
 				"messages": []any{map[string]any{"role": "user", "content": "hi"}},
 				"model":    "test-model",
 				"nvext":    map[string]any{"agent_hints": map[string]any{"priority": 7}},

@@ -716,7 +716,7 @@ helm uninstall agentgateway-crds -n agentgateway-system
 kubectl delete namespace agentgateway-system --ignore-not-found
 
 # 4. Delete the Inference Extension CRDs
-IGW_LATEST_RELEASE=v1.5.0-rc.2
+IGW_LATEST_RELEASE=v1.5.0
 kubectl delete -f https://github.com/kubernetes-sigs/gateway-api-inference-extension/releases/download/${IGW_LATEST_RELEASE}/manifests.yaml --ignore-not-found
 
 # 5. Delete the Gateway API CRDs
@@ -726,7 +726,7 @@ kubectl delete -f https://github.com/kubernetes-sigs/gateway-api/releases/downlo
 
 ## Gateway API Inference Extension Integration
 
-This section documents the updated plugin implementation for Gateway API Inference Extension **v1.5.0-rc.2**.
+This section documents the updated plugin implementation for Gateway API Inference Extension **v1.5.0**.
 
 ### Router bookkeeping operations
 
