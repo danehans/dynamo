@@ -484,7 +484,7 @@ func main() {
 	if restrictedNamespace == "" {
 		factory = informers.NewSharedInformerFactory(kubernetes.NewForConfigOrDie(mgr.GetConfig()), time.Hour*24)
 	} else {
-		factory = informers.NewFilteredSharedInformerFactory(
+		factory = informers.NewFilteredSharedInformerFactory( //nolint:staticcheck // TODO(sttts).
 			kubernetes.NewForConfigOrDie(mgr.GetConfig()),
 			time.Hour*24,
 			restrictedNamespace,
@@ -634,7 +634,7 @@ func registerControllers(
 ) error {
 	if err := (&controller.DynamoComponentDeploymentReconciler{
 		Client:                mgr.GetClient(),
-		Recorder:              mgr.GetEventRecorderFor("dynamocomponentdeployment"),
+		Recorder:              mgr.GetEventRecorderFor("dynamocomponentdeployment"), //nolint:staticcheck // TODO(sttts).
 		Config:                operatorCfg,
 		RuntimeConfig:         runtimeConfig,
 		DockerSecretRetriever: dockerSecretRetriever,
@@ -651,7 +651,7 @@ func registerControllers(
 
 	if err = (&controller.DynamoGraphDeploymentReconciler{
 		Client:                mgr.GetClient(),
-		Recorder:              mgr.GetEventRecorderFor("dynamographdeployment"),
+		Recorder:              mgr.GetEventRecorderFor("dynamographdeployment"), //nolint:staticcheck // TODO(sttts).
 		Config:                operatorCfg,
 		RuntimeConfig:         runtimeConfig,
 		DockerSecretRetriever: dockerSecretRetriever,
@@ -665,7 +665,7 @@ func registerControllers(
 	if err = (&controller.DynamoGraphDeploymentScalingAdapterReconciler{
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
-		Recorder:      mgr.GetEventRecorderFor("dgdscalingadapter"),
+		Recorder:      mgr.GetEventRecorderFor("dgdscalingadapter"), //nolint:staticcheck // TODO(sttts).
 		Config:        operatorCfg,
 		RuntimeConfig: runtimeConfig,
 	}).SetupWithManager(mgr); err != nil {
@@ -675,7 +675,7 @@ func registerControllers(
 	if err = (&controller.DynamoGraphDeploymentRequestReconciler{
 		Client:            mgr.GetClient(),
 		APIReader:         mgr.GetAPIReader(),
-		Recorder:          mgr.GetEventRecorderFor("dynamographdeploymentrequest"),
+		Recorder:          mgr.GetEventRecorderFor("dynamographdeploymentrequest"), //nolint:staticcheck // TODO(sttts).
 		Config:            operatorCfg,
 		RuntimeConfig:     runtimeConfig,
 		GPUDiscoveryCache: gpu.NewGPUDiscoveryCache(),
@@ -687,7 +687,7 @@ func registerControllers(
 
 	if err = (&controller.DynamoModelReconciler{
 		Client:         mgr.GetClient(),
-		Recorder:       mgr.GetEventRecorderFor("dynamomodel"),
+		Recorder:       mgr.GetEventRecorderFor("dynamomodel"), //nolint:staticcheck // TODO(sttts).
 		EndpointClient: modelendpoint.NewClient(),
 		Config:         operatorCfg,
 		RuntimeConfig:  runtimeConfig,
@@ -699,7 +699,7 @@ func registerControllers(
 		Client:        mgr.GetClient(),
 		Config:        operatorCfg,
 		RuntimeConfig: runtimeConfig,
-		Recorder:      mgr.GetEventRecorderFor("checkpoint"),
+		Recorder:      mgr.GetEventRecorderFor("checkpoint"), //nolint:staticcheck // TODO(sttts).
 	}).SetupWithManager(mgr); err != nil {
 		return fmt.Errorf("unable to create DynamoCheckpoint controller: %w", err)
 	}
@@ -707,7 +707,7 @@ func registerControllers(
 	if runtimeConfig.GroveEnabled {
 		if err = controller.NewFailoverCascadeReconciler(
 			mgr.GetClient(),
-			mgr.GetEventRecorderFor("gms-failover-cascade"),
+			mgr.GetEventRecorderFor("gms-failover-cascade"), //nolint:staticcheck // TODO(sttts).
 		).SetupWithManager(mgr); err != nil {
 			return fmt.Errorf("unable to create GMS FailoverCascade controller: %w", err)
 		}
@@ -718,7 +718,7 @@ func registerControllers(
 		NodeReader:    mgr.GetAPIReader(),
 		Config:        operatorCfg,
 		RuntimeConfig: runtimeConfig,
-		Recorder:      mgr.GetEventRecorderFor("topology-label"),
+		Recorder:      mgr.GetEventRecorderFor("topology-label"), //nolint:staticcheck // TODO(sttts).
 	}).SetupWithManager(mgr); err != nil {
 		return fmt.Errorf("unable to create TopologyLabel controller: %w", err)
 	}
@@ -788,26 +788,22 @@ func registerWebhooks(
 		return fmt.Errorf("unable to register DynamoGraphDeploymentRequest webhook: %w", err)
 	}
 
-	if err := ctrl.NewWebhookManagedBy(mgr).
-		For(&nvidiacomv1beta1.DynamoGraphDeploymentRequest{}).
+	if err := ctrl.NewWebhookManagedBy(mgr, &nvidiacomv1beta1.DynamoGraphDeploymentRequest{}).
 		Complete(); err != nil {
 		return fmt.Errorf("unable to register DynamoGraphDeploymentRequest conversion webhook: %w", err)
 	}
 
-	if err := ctrl.NewWebhookManagedBy(mgr).
-		For(&nvidiacomv1beta1.DynamoGraphDeployment{}).
+	if err := ctrl.NewWebhookManagedBy(mgr, &nvidiacomv1beta1.DynamoGraphDeployment{}).
 		Complete(); err != nil {
 		return fmt.Errorf("unable to register DynamoGraphDeployment conversion webhook: %w", err)
 	}
 
-	if err := ctrl.NewWebhookManagedBy(mgr).
-		For(&nvidiacomv1beta1.DynamoComponentDeployment{}).
+	if err := ctrl.NewWebhookManagedBy(mgr, &nvidiacomv1beta1.DynamoComponentDeployment{}).
 		Complete(); err != nil {
 		return fmt.Errorf("unable to register DynamoComponentDeployment conversion webhook: %w", err)
 	}
 
-	if err := ctrl.NewWebhookManagedBy(mgr).
-		For(&nvidiacomv1beta1.DynamoGraphDeploymentScalingAdapter{}).
+	if err := ctrl.NewWebhookManagedBy(mgr, &nvidiacomv1beta1.DynamoGraphDeploymentScalingAdapter{}).
 		Complete(); err != nil {
 		return fmt.Errorf("unable to register DynamoGraphDeploymentScalingAdapter conversion webhook: %w", err)
 	}

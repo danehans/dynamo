@@ -60,12 +60,15 @@ func GetExcludedNamespaces() ExcludedNamespacesChecker {
 // This implements the Decorator pattern to transparently add coordination logic without
 // modifying the actual validation implementations.
 type LeaseAwareValidator struct {
+	//nolint:staticcheck // TODO(sttts): Migrate to admission.Validator.
 	validator          admission.CustomValidator
 	excludedNamespaces ExcludedNamespacesChecker
 }
 
 // NewLeaseAwareValidator creates a new LeaseAwareValidator that wraps the given validator.
 // If excludedNamespaces is nil, the wrapper acts as a pass-through (no filtering).
+//
+//nolint:staticcheck // TODO(sttts): Migrate to admission.Validator.
 func NewLeaseAwareValidator(validator admission.CustomValidator, excludedNamespaces ExcludedNamespacesChecker) admission.CustomValidator {
 	if excludedNamespaces == nil {
 		// No exclusion logic needed, return validator as-is

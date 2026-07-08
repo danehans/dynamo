@@ -28,11 +28,14 @@ import (
 // ObservedValidator wraps any CustomValidator and automatically records metrics
 // for webhook validation duration, results, and denials.
 type ObservedValidator struct {
+	//nolint:staticcheck // TODO(sttts): Migrate to admission.Validator.
 	admission.CustomValidator
 	resourceType string
 }
 
 // NewObservedValidator creates a new ObservedValidator wrapper
+//
+//nolint:staticcheck // TODO(sttts): Migrate to admission.Validator.
 func NewObservedValidator(v admission.CustomValidator, resourceType string) *ObservedValidator {
 	return &ObservedValidator{
 		CustomValidator: v,

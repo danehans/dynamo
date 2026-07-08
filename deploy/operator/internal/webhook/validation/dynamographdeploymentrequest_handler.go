@@ -121,6 +121,7 @@ func (h *DynamoGraphDeploymentRequestHandler) RegisterWithManager(mgr manager.Ma
 	// Wrap with metrics collection
 	observedValidator := observability.NewObservedValidator(leaseAwareValidator, consts.ResourceTypeDynamoGraphDeploymentRequest)
 
+	//nolint:staticcheck // TODO(sttts): Migrate to admission.Validator.
 	webhook := admission.
 		WithCustomValidator(mgr.GetScheme(), &nvidiacomv1beta1.DynamoGraphDeploymentRequest{}, observedValidator).
 		WithRecoverPanic(true)

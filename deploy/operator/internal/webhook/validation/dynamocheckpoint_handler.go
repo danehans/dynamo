@@ -78,6 +78,7 @@ func (h *DynamoCheckpointHandler) ValidateDelete(ctx context.Context, obj runtim
 func (h *DynamoCheckpointHandler) RegisterWithManager(mgr manager.Manager) error {
 	leaseAwareValidator := internalwebhook.NewLeaseAwareValidator(h, internalwebhook.GetExcludedNamespaces())
 	observedValidator := observability.NewObservedValidator(leaseAwareValidator, consts.ResourceTypeDynamoCheckpoint)
+	//nolint:staticcheck // TODO(sttts): Migrate to admission.Validator.
 	webhook := admission.
 		WithCustomValidator(mgr.GetScheme(), &nvidiacomv1alpha1.DynamoCheckpoint{}, observedValidator).
 		WithRecoverPanic(true)

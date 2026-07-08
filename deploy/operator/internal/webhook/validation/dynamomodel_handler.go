@@ -128,6 +128,7 @@ func (h *DynamoModelHandler) RegisterWithManager(mgr manager.Manager) error {
 	// Wrap with metrics collection
 	observedValidator := observability.NewObservedValidator(leaseAwareValidator, consts.ResourceTypeDynamoModel)
 
+	//nolint:staticcheck // TODO(sttts): Migrate to admission.Validator.
 	webhook := admission.
 		WithCustomValidator(mgr.GetScheme(), &nvidiacomv1alpha1.DynamoModel{}, observedValidator).
 		WithRecoverPanic(true)
